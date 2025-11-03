@@ -2,9 +2,10 @@
   "name": "message-rabbit",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "dist/index.js",
   "scripts": {
+    "build": "ncc build src/index.js -o dist",
+    "prepare": "npm run build",
     "lint": "echo \"No lint configured\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,5 +15,8 @@
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
     "@aws-sdk/client-bedrock-runtime": "^3.525.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.4"
   }
 }

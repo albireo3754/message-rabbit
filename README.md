@@ -6,7 +6,7 @@ Generate actionable pull request reviews with AWS Bedrock models (for example Cl
 
 - Runs on pull request events (`pull_request`, `pull_request_target`, or workflow call with PR context).
 - A GitHub token with read access to the repository (defaults to `secrets.GITHUB_TOKEN`).
-- AWS credentials with permission to invoke the selected Bedrock model (`bedrock:InvokeModel`). You can configure them with [`aws-actions/configure-aws-credentials`](https://github.com/aws-actions/configure-aws-credentials).
+- AWS credentials with permission to invoke the selected Bedrock model (`bedrock:InvokeModel`). Provide them as environment variables on the runner (e.g., `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, optional `AWS_SESSION_TOKEN`), or use [`aws-actions/configure-aws-credentials`](https://github.com/aws-actions/configure-aws-credentials) if you prefer automatic credential export.
 
 ## Basic Usage
 
@@ -25,15 +25,14 @@ jobs:
       pull-requests: read
     steps:
       - uses: actions/checkout@v4
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::<account-id>:role/<bedrock-invoke-role>
-          aws-region: ap-northeast-2
-
       - name: Generate review with Bedrock
         id: review
         uses: ./. # replace with the published action reference
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} # optional for temporary creds
+          AWS_REGION: ap-northeast-2
         with:
           bedrock-region: ap-northeast-2
           bedrock-model-id: anthropic.claude-3-sonnet-20240229-v1:0
@@ -74,4 +73,4 @@ jobs:
 
 - Diffs larger than the configured budget are truncated per file to keep prompts within model limits.
 - Binary files and files without textual patches are flagged in the prompt so the model knows they were changed.
-- Rotate AWS credentials carefully and scope them to Bedrock invocation only.
+- Rotate AWS credentials carefully and scope them to Bedrock invocation only. The action reads standard AWS SDK environment variables, so you can pass secrets directly without an extra configuration step.

@@ -1,4 +1,4 @@
-name: PR Review with Bedrock
+name: Bedrock PR Review
 
 on:
   pull_request:
@@ -7,24 +7,18 @@ on:
 jobs:
   review:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
     steps:
       - uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::<account-id>:role/<bedrock-invoke-role>
-          aws-region: ap-northeast-2
 
       - name: Generate Bedrock review
         id: bedrock-review
         uses: ./. # replace with owner/repo@ref once published
+        env:
+          AWS_BEARER_TOKEN_BEDROCK: ${{ secrets.AWS_BEARER_TOKEN_BEDROCK }} # optional
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           bedrock-region: ap-northeast-2
-          bedrock-model-id: anthropic.claude-3-sonnet-20240229-v1:0
+          bedrock-model-id: apac.anthropic.claude-3-sonnet-20240229-v1:0
           review-instructions: |
             - Prioritize correctness issues and missing test coverage
             - Highlight any obvious performance regressions
@@ -35,3 +29,4 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: ${{ steps.bedrock-review.outputs.review }}
+          token : ${{ secrets.GH_TOKEN }}
