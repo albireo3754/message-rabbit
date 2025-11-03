@@ -18,6 +18,7 @@ jobs:
         uses: ./. # replace with owner/repo@ref once published
         env:
           AWS_BEARER_TOKEN_BEDROCK: ${{ secrets.AWS_BEARER_TOKEN_BEDROCK }} # optional
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           bedrock-region: ap-northeast-2
           bedrock-model-id: anthropic.claude-3-sonnet-20240229-v1:0
