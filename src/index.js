@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const { BedrockRuntimeClient, InvokeModelCommand } = require('@aws-sdk/client-bedrock-runtime');
 
 const DEFAULT_MAX_DIFF_CHARS = 60000;
-const DEFAULT_MODEL = 'anthropic.claude-3-sonnet-20240229-v1:0';
+const DEFAULT_MODEL = 'apac.anthropic.claude-3-sonnet-20240229-v1:0';
 const textDecoder = new TextDecoder();
 
 function readBooleanInput(name, defaultValue = false) {

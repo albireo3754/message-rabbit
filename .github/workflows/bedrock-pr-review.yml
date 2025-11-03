@@ -21,7 +21,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           bedrock-region: ap-northeast-2
-          bedrock-model-id: anthropic.claude-3-sonnet-20240229-v1:0
+          bedrock-model-id: apac.anthropic.claude-3-sonnet-20240229-v1:0
           review-instructions: |
             - Prioritize correctness issues and missing test coverage
             - Highlight any obvious performance regressions
