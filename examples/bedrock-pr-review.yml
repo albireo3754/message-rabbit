@@ -1,4 +1,4 @@
-name: Bedrock PR Review
+name: PR Review with Bedrock
 
 on:
   pull_request:
