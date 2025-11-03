@@ -1,0 +1,43 @@
+name: 'bedrock-pr-review'
+description: 'Generate LLM pull request reviews using AWS Bedrock models'
+author: 'message-rabbit'
+inputs:
+  github-token:
+    description: 'GitHub token with read access to the PR (defaults to secrets.GITHUB_TOKEN)'
+    required: false
+  bedrock-region:
+    description: 'AWS region where the Bedrock model is hosted'
+    required: true
+  bedrock-model-id:
+    description: 'Bedrock model identifier (e.g. anthropic.claude-3-sonnet-20240229-v1:0)'
+    required: false
+    default: 'anthropic.claude-3-sonnet-20240229-v1:0'
+  review-instructions:
+    description: 'Additional instructions or context for the reviewer agent'
+    required: false
+  system-prompt:
+    description: 'Optional override for the system prompt sent to the LLM'
+    required: false
+  max-diff-chars:
+    description: 'Maximum number of diff characters to send to the model'
+    required: false
+    default: '60000'
+  max-model-tokens:
+    description: 'Maximum tokens to request from the model response'
+    required: false
+    default: '2500'
+  include-review-summary:
+    description: 'If true, render a short summary of the review in the GitHub Actions job summary'
+    required: false
+    default: 'true'
+outputs:
+  review:
+    description: 'LLM generated review text'
+  model-response-json:
+    description: 'Raw JSON payload returned from the Bedrock invocation'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
+branding:
+  color: 'green'
+  icon: 'message-circle'

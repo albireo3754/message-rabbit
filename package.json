@@ -1,0 +1,18 @@
+{
+  "name": "message-rabbit",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "lint": "echo \"No lint configured\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1",
+    "@aws-sdk/client-bedrock-runtime": "^3.525.0"
+  }
+}
