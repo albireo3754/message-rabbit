@@ -15,8 +15,8 @@ jobs:
         uses: ./. # replace with owner/repo@ref once published
         env:
           AWS_BEARER_TOKEN_BEDROCK: ${{ secrets.AWS_BEARER_TOKEN_BEDROCK }} # optional
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
+          github-token: ${{ secrets.GH_TOKEN }}
           bedrock-region: ap-northeast-2
           bedrock-model-id: apac.anthropic.claude-3-sonnet-20240229-v1:0
           review-instructions: |
@@ -29,4 +29,4 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: ${{ steps.bedrock-review.outputs.review }}
-          token : ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}

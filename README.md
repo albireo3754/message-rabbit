@@ -6,7 +6,7 @@ Generate actionable pull request reviews with AWS Bedrock models (for example Cl
 
 - Runs on pull request events (`pull_request`, `pull_request_target`, or workflow call with PR context).
 - A GitHub token with read access to the repository (defaults to `secrets.GITHUB_TOKEN`).
-- AWS credentials with permission to invoke the selected Bedrock model (`bedrock:InvokeModel`). Provide them as environment variables on the runner (e.g., `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, optional `AWS_SESSION_TOKEN`), or use [`aws-actions/configure-aws-credentials`](https://github.com/aws-actions/configure-aws-credentials) if you prefer automatic credential export.
+- AWS credentials with permission to invoke the selected Bedrock model (`bedrock:InvokeModel`). Provide standard AWS SDK credentials (e.g., `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, optional `AWS_SESSION_TOKEN`) or an [AWS bearer token](https://docs.aws.amazon.com/bedrock/latest/userguide/api-requests.html) such as `AWS_BEARER_TOKEN_BEDROCK`.
 
 ## Basic Usage
 
@@ -28,16 +28,15 @@ jobs:
       - name: Generate review with Bedrock
         id: review
         uses: ./. # replace with the published action reference
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} # optional for temporary creds
-          AWS_REGION: ap-northeast-2
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           bedrock-region: ap-northeast-2
-          bedrock-model-id: anthropic.claude-3-sonnet-20240229-v1:0
+          bedrock-model-id: apac.anthropic.claude-3-sonnet-20240229-v1:0
           review-instructions: |
-            Focus on regressions and missing tests. Give high-level summary first.
+            - Prioritize correctness issues and missing test coverage
+            - Highlight any obvious performance regressions
+        env:
+          AWS_BEARER_TOKEN_BEDROCK: ${{ secrets.AWS_BEARER_TOKEN_BEDROCK }} # optional bearer token
 
       - name: Create PR comment
         if: steps.review.outputs.review != ''
@@ -55,7 +54,7 @@ jobs:
 | ---- | -------- | ------- | ----------- |
 | `github-token` | No | `secrets.GITHUB_TOKEN` | Token used for GitHub API calls. |
 | `bedrock-region` | Yes | — | AWS region hosting the Bedrock endpoint. |
-| `bedrock-model-id` | No | `anthropic.claude-3-sonnet-20240229-v1:0` | Bedrock model identifier. |
+| `bedrock-model-id` | No | `apac.anthropic.claude-3-sonnet-20240229-v1:0` | Bedrock model identifier. |
 | `review-instructions` | No | — | Extra instructions for the reviewer agent. |
 | `system-prompt` | No | Internal default | Override the system prompt sent to the model. |
 | `max-diff-chars` | No | `60000` | Maximum diff characters forwarded to the model. |
